@@ -1,4 +1,9 @@
 "use client";
+import control_panel_styles from "../assets/sass/controlPanel.module.scss";
+import header_panel_styles from "../assets/sass/headerPanel.module.scss";
+import footer_panel_styles from "../assets/sass/footerPanel.module.scss";
+import building_panel_styles from "../assets/sass/buildingPanel.module.scss";
+
 import BuildingPanel from "@/src/panels/buildingPanel";
 import ControlPanel from "@/src/panels/controlPanel";
 import FooterPanel from "@/src/panels/footerPanel";
@@ -12,18 +17,18 @@ const App = () => {
 
   return (
     <>
-      <header>
+      <div className={header_panel_styles.header_panel_wrapper}>
         <HeaderPanel />
-      </header>
-      <section>
+      </div>
+      <div className={building_panel_styles.building_panel_wrapper}>
         <BuildingPanel />
-      </section>
-      <section>
+      </div>
+      <div className={control_panel_styles.control_panel_wrapper}>
         <ControlPanel />
-      </section>
-      <section>
+      </div>
+      <div className={footer_panel_styles.footer_panel_wrapper}>
         <FooterPanel />
-      </section>
+      </div>
     </>
   );
 };

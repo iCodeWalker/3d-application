@@ -1,0 +1,15 @@
+.header_panel_wrapper {
+    width: 80vw;
+    height: 8vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    .header_panel_container {
+        background-color: yellow;
+    }
+}
