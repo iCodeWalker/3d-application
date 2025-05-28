@@ -186,14 +186,14 @@ export default function Experience() {
 
   //   console.log(woodTexture, "woodTexture");
 
-  function Box(props) {
-    return (
-      <mesh {...props}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshLambertMaterial attach="material" color="hotpink" />
-      </mesh>
-    );
-  }
+  // function Box(props) {
+  //   return (
+  //     <mesh {...props}>
+  //       <boxGeometry args={[1, 1, 1]} />
+  //       <meshLambertMaterial attach="material" color="hotpink" />
+  //     </mesh>
+  //   );
+  // }
   return (
     <>
       {/* <Perf position="top-left" /> */}
@@ -201,7 +201,7 @@ export default function Experience() {
         makeDefault
         minDistance={10}
         maxDistance={60}
-        target={[1, 0, 1]}
+        target={[15, 0, -15]}
       />
       <directionalLight castShadow position={[6, 4, 1]} intensity={2.5} />
       <directionalLight castShadow position={[-6, 4, 1]} intensity={2.5} />
@@ -209,7 +209,7 @@ export default function Experience() {
       <directionalLight castShadow position={[-6, 4, -10]} intensity={2.5} />
 
       <ambientLight intensity={0.5} />
-      <Box position={[1.2, 0, 0]}></Box>
+      {/* <Box position={[1.2, 0, 0]}></Box> */}
 
       {/* <axesHelper args={[20]} /> */}
       {/* <mesh castShadow position={[-2, 2, 0]}>
@@ -222,14 +222,14 @@ export default function Experience() {
       </mesh> */}
       {/*  Left */}
       {/* <FloorModel length={14} width={14} /> */}
-      {/* <FloorModel
+      <FloorModel
         length={30}
         width={30}
         tileLength={2}
         tileWidth={2}
         gapColor="red"
-        // texture={buildingReducer.selectedTileTexture}
-      /> */}
+        texture="tile.jpg"
+      />
 
       {/* <FrontWallModel
         wallLength={buildingReducer.width}

@@ -38,7 +38,7 @@ const ControlPanel = () => {
   return (
     <div className={styles.control_panel_container}>
       <div style={{ margin: "10px" }}>
-        <label for="width">Choose a width:</label>
+        <label htmlFor="width">Choose a width:</label>
 
         <select
           name="width"
@@ -62,7 +62,7 @@ const ControlPanel = () => {
         </select>
       </div>
       <div style={{ margin: "10px" }}>
-        <label for="length">Choose a length:</label>
+        <label htmlFor="length">Choose a length:</label>
 
         <select
           name="length"
