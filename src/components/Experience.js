@@ -199,14 +199,14 @@ export default function Experience() {
       {/* <Perf position="top-left" /> */}
       <OrbitControls
         makeDefault
-        minDistance={10}
+        minDistance={1}
         maxDistance={60}
-        target={[15, 0, -15]}
+        target={[5, 0, -5]}
       />
-      <directionalLight castShadow position={[6, 4, 1]} intensity={2.5} />
+      {/* <directionalLight castShadow position={[6, 4, 1]} intensity={2.5} />
       <directionalLight castShadow position={[-6, 4, 1]} intensity={2.5} />
       <directionalLight castShadow position={[6, 4, 10]} intensity={2.5} />
-      <directionalLight castShadow position={[-6, 4, -10]} intensity={2.5} />
+      <directionalLight castShadow position={[-6, 4, -10]} intensity={2.5} /> */}
 
       <ambientLight intensity={0.5} />
       {/* <Box position={[1.2, 0, 0]}></Box> */}
@@ -223,8 +223,8 @@ export default function Experience() {
       {/*  Left */}
       {/* <FloorModel length={14} width={14} /> */}
       <FloorModel
-        length={30}
-        width={30}
+        length={10}
+        width={10}
         tileLength={2}
         tileWidth={2}
         gapColor="red"

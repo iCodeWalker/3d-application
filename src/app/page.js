@@ -17,18 +17,18 @@ const App = () => {
 
   return (
     <>
-      {/* <div className={header_panel_styles.header_panel_wrapper}>
+      <div className={header_panel_styles.header_panel_wrapper}>
         <HeaderPanel />
-      </div> */}
+      </div>
       <div className={building_panel_styles.building_panel_wrapper}>
         <BuildingPanel />
       </div>
       <div className={control_panel_styles.control_panel_wrapper}>
         <ControlPanel />
       </div>
-      {/* <div className={footer_panel_styles.footer_panel_wrapper}>
+      <div className={footer_panel_styles.footer_panel_wrapper}>
         <FooterPanel />
-      </div> */}
+      </div>
     </>
   );
 };

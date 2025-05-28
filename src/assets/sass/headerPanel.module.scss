@@ -4,10 +4,11 @@
     position: absolute;
     top: 0;
     left: 0;
-    background-color: blue;
+    background-color: rgba(236, 236, 240, 0);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
     
     .header_panel_container {
         background-color: yellow;
