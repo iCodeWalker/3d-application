@@ -1,14 +1,13 @@
 .building_panel_wrapper {
-    width: 80vw;
-    height: 100vh;
+    width: 75vw;
+    height: 84vh;
     position: absolute;
     left: 0;
     top: 8vh;
     background-color: rgb(208, 65, 65);
-    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     
     .building_panel_container {
-        background-color: green;
+        background-color: rgb(239, 235, 235);
         // width: 98%;
         height: 100%;
 
