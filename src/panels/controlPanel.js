@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import {
   handleFloorDimensionChange,
   handleTileDimensionChange,
-} from "../lib/store/features/building/floorSlice";
+} from "../lib/store/features/building/floorSlice/floorSlice";
 import { useAppDispatch, useAppSelector } from "../lib/store/hooks";
 
 const ControlPanel = () => {

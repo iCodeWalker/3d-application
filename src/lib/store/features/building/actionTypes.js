@@ -1,0 +1,12 @@
+/**
+ * Action types for floor reducer
+ */
+export const actionTypes = {
+  WIDTH: "WIDTH",
+  LENGTH: "LENGTH",
+  TILE_WIDTH: "TILE_WIDTH",
+  TILE_LENGTH: "TILE_LENGTH",
+  TILE_THICKNESS: "TILE_THICKNESS",
+  TILE_FILLING_COLOR: "TILE_FILLING_COLOR",
+  TILE_TEXTURE: "TILE_TEXTURE",
+};
