@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CustomizedSelect from "./customizedSelect";
 import Divider from "@mui/material/Divider";
+import CustomColorPicker from "./customColorPicker";
 
 const widthOptions = [
   { label: "10", value: "10" },
@@ -54,7 +55,7 @@ export default function ControlledAccordions() {
             <CustomizedSelect label="Width" data={widthOptions} />
             <CustomizedSelect label="Length" data={lengthOptions} />
           </div>
-          <div style={{ margin: "8px" }}>
+          <div style={{ margin: "8px", marginBottom: "20px" }}>
             <Typography
               component="span"
               sx={{ width: "100%", flexShrink: 0, fontSize: "14px" }}
@@ -78,7 +79,27 @@ export default function ControlledAccordions() {
               data={lengthOptions}
               width="110px"
             />
+            <Typography
+              component="span"
+              sx={{
+                width: "100%",
+                flexShrink: 0,
+                fontSize: "13px",
+                color: "rgba(0, 0, 0, 0.6)",
+                fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+                fontWeight: "400",
+                lineHeight: "23px",
+                margin: "8px",
+                marginBottom: "16px",
+              }}
+            >
+              Tile filling color
+            </Typography>
+            <div style={{ margin: "8px" }}>
+              <CustomColorPicker />
+            </div>
           </div>
+          <Divider />
         </AccordionDetails>
         <Divider />
       </Accordion>

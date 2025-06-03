@@ -38,54 +38,6 @@ const ControlPanel = () => {
   console.log(floor, "control panel");
   return (
     <div className={styles.control_panel_container}>
-      <div style={{ margin: "10px" }}>
-        <label htmlFor="width">Choose a width:</label>
-
-        <select
-          name="width"
-          id="width"
-          onChange={(e) =>
-            dispatch(
-              handleFloorDimensionChange({
-                key: "width",
-                value: e.target.value,
-              })
-            )
-          }
-        >
-          {floorData.widthOptions?.map((item, index) => {
-            return (
-              <option key={index} value={item.value}>
-                {item.label}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-      <div style={{ margin: "10px" }}>
-        <label htmlFor="length">Choose a length:</label>
-
-        <select
-          name="length"
-          id="length"
-          onChange={(e) =>
-            dispatch(
-              handleFloorDimensionChange({
-                key: "length",
-                value: e.target.value,
-              })
-            )
-          }
-        >
-          {floorData.lengthOptions?.map((item, index) => {
-            return (
-              <option key={index} value={item.value}>
-                {item.label}
-              </option>
-            );
-          })}
-        </select>
-      </div>
       <ControlledAccordions />
     </div>
   );
