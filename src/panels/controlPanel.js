@@ -6,6 +6,7 @@ import {
   handleTileDimensionChange,
 } from "../lib/store/features/building/floorSlice/floorSlice";
 import { useAppDispatch, useAppSelector } from "../lib/store/hooks";
+import ControlledAccordions from "../components/accordion";
 
 const ControlPanel = () => {
   const dispatch = useAppDispatch();
@@ -85,6 +86,7 @@ const ControlPanel = () => {
           })}
         </select>
       </div>
+      <ControlledAccordions />
     </div>
   );
 };

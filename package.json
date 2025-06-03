@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.1.1",
+    "@mui/material": "^7.1.1",
     "@react-three/csg": "^4.0.0",
     "@react-three/drei": "^10.0.8",
     "@react-three/fiber": "^9.1.2",
@@ -17,6 +21,7 @@
     "next": "15.3.2",
     "r3f-perf": "^7.2.3",
     "react": "^19.0.0",
+    "react-color-palette": "^7.3.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
