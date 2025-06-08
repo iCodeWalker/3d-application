@@ -1,4 +1,3 @@
-"use client";
 import control_panel_styles from "../assets/sass/controlPanel.module.scss";
 import header_panel_styles from "../assets/sass/headerPanel.module.scss";
 import footer_panel_styles from "../assets/sass/footerPanel.module.scss";
@@ -8,12 +7,10 @@ import BuildingPanel from "@/src/panels/buildingPanel";
 import ControlPanel from "@/src/panels/controlPanel";
 import FooterPanel from "@/src/panels/footerPanel";
 import HeaderPanel from "@/src/panels/headerPanel";
-import { useAppSelector } from "../lib/store/hooks";
+// import { useAppSelector } from "../lib/store/hooks";
 
 const App = () => {
-  const authentication = useAppSelector((state) => state.authentication);
-
-  console.log(authentication, "Experience");
+  // const authentication = useAppSelector((state) => state.authentication);
 
   return (
     <>

@@ -1,3 +1,4 @@
+"use client";
 import styles from "../assets/sass/buildingPanel.module.scss";
 
 import React from "react";

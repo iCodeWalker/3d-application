@@ -1,3 +1,4 @@
+"use client";
 import { OrbitControls } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { Perf } from "r3f-perf";

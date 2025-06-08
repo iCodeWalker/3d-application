@@ -1,3 +1,4 @@
+"use client";
 import { useAppSelector } from "@/src/lib/store/hooks";
 import { useLoader } from "@react-three/fiber";
 import { useEffect, useState } from "react";
