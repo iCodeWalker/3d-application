@@ -39,10 +39,12 @@ export const floorSlice = createSlice({
     handleFloorDimensionChange: (state, action) => {
       switch (action.payload.key) {
         case actionTypes.WIDTH:
-          state.width = action.payload.value;
+          state.width = Number(action.payload.value);
+          return state;
 
         case actionTypes.LENGTH:
           state.length = action.payload.value;
+          return state;
 
         default:
           return state;

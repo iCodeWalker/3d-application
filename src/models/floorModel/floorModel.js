@@ -1,4 +1,4 @@
-"use client";
+import { useAppSelector } from "@/src/lib/store/hooks";
 import { useLoader } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import * as THREE from "three";
@@ -7,10 +7,10 @@ import * as THREE from "three";
 // first argument of the floorModel.moveTo will be considered for the width of the floor
 
 const FloorModel = ({
-  length = 30,
-  width = 30,
-  tileLength = 2,
-  tileWidth = 2,
+  length,
+  width,
+  tileLength,
+  tileWidth,
   gapColor = "red",
   texture,
 }) => {
@@ -321,6 +321,12 @@ const FloorModel = ({
     let tilesData = verticalTileMesh();
     setTilesData([...tilesData, ...horizontalTileGapData]);
   }, [length, width, tileLength, tileWidth, gapColor, texture]);
+
+  const floor = useAppSelector((state) => state.floor);
+
+  console.log(floor, "floorModel================");
+
+  useEffect(() => {}, [floor.width]);
 
   return (
     <>

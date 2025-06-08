@@ -6,7 +6,8 @@ import {
   handleTileDimensionChange,
 } from "../lib/store/features/building/floorSlice/floorSlice";
 import { useAppDispatch, useAppSelector } from "../lib/store/hooks";
-import ControlledAccordions from "../components/accordion";
+import CustomizedSelect from "../components/accordion";
+import Divider from "@mui/material/Divider";
 
 const ControlPanel = () => {
   const dispatch = useAppDispatch();
@@ -35,10 +36,20 @@ const ControlPanel = () => {
 
   useEffect(() => {}, [floor]);
 
-  console.log(floor, "control panel");
   return (
     <div className={styles.control_panel_container}>
-      <ControlledAccordions />
+      <Divider />
+
+      <CustomizedSelect />
+
+      <div
+        style={{
+          marginTop: "20px",
+          paddingBottom: "50px",
+          height: "20px",
+          backgroundColor: "red",
+        }}
+      ></div>
     </div>
   );
 };

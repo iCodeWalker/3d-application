@@ -6,6 +6,9 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import NativeSelect from "@mui/material/NativeSelect";
 import InputBase from "@mui/material/InputBase";
+import { handleFloorDimensionChange } from "../lib/store/features/building/floorSlice/floorSlice";
+import { useAppDispatch, useAppSelector } from "../lib/store/hooks";
+import { actionTypes } from "../lib/store/features/building/actionTypes";
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
@@ -47,8 +50,17 @@ export default function CustomizedSelect({
   width = "125px",
 }) {
   const [age, setAge] = React.useState(10);
+  const floor = useAppSelector((state) => state.floor);
+
+  const dispatch = useAppDispatch();
   const handleChange = (event) => {
     setAge(event.target.value);
+    dispatch(
+      handleFloorDimensionChange({
+        key: actionTypes.WIDTH,
+        value: event.target.value,
+      })
+    );
   };
   return (
     <div>

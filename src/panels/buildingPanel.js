@@ -6,9 +6,6 @@ import Experience from "../components/Experience";
 import { useAppSelector } from "../lib/store/hooks";
 
 const BuildingPanel = () => {
-  const floor = useAppSelector((state) => state.floor);
-
-  console.log(floor, "Experience");
   return (
     <div className={styles.building_panel_container}>
       <Canvas

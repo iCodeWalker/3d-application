@@ -27,7 +27,7 @@ const lengthOptions = [
   { label: "70", value: "70" },
 ];
 
-export default function ControlledAccordions() {
+export default function CustomAccordion() {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -35,7 +35,7 @@ export default function ControlledAccordions() {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "20px", marginBottom: "20px" }}>
       <Accordion
         expanded={expanded === "panel1"}
         onChange={handleChange("panel1")}
