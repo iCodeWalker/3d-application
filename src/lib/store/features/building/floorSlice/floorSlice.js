@@ -19,8 +19,8 @@ const initialState = {
   length: 30,
   tileLength: 2,
   tileWidth: 2,
-  tilethickness: 0.3,
-  tilefillingColor: "#f1f39c",
+  tileThickness: 0.3,
+  tileFillingColor: "#f1f39c",
   tileTexture: "tile.jpg",
 };
 
@@ -72,7 +72,7 @@ export const floorSlice = createSlice({
           break;
 
         case actionTypes.TILE_THICKNESS:
-          state.tilethickness = action.payload.value;
+          state.tileThickness = action.payload.value;
           break;
 
         default:
@@ -92,7 +92,8 @@ export const floorSlice = createSlice({
     handleTileAttributesChange: (state, action) => {
       switch (action.payload.key) {
         case actionTypes.TILE_FILLING_COLOR:
-          state.tilefillingColor = action.payload.value;
+          console.log("handleFloorFillingColorChange", action);
+          state.tileFillingColor = action.payload.value;
 
         case actionTypes.TILE_TEXTURE:
           state.tileTexture = action.payload.value;

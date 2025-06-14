@@ -47,33 +47,23 @@ export default function CustomizedSelect({
   label,
   data,
   onChange,
+  value,
   width = "125px",
 }) {
-  const [age, setAge] = React.useState(10);
   const floor = useAppSelector((state) => state.floor);
 
   const dispatch = useAppDispatch();
   const handleChange = (event) => {
-    setAge(event.target.value);
-    dispatch(
-      handleFloorDimensionChange({
-        key: actionTypes.WIDTH,
-        value: event.target.value,
-      })
-    );
+    onChange(event);
   };
   return (
     <div>
-      {/* <FormControl sx={{ m: 1 }} variant="standard">
-        <InputLabel htmlFor="demo-customized-textbox">Age</InputLabel>
-        <BootstrapInput id="demo-customized-textbox" />
-      </FormControl> */}
       <FormControl sx={{ m: 1, width: width }} variant="standard">
         <InputLabel id="demo-customized-select-label">{label}</InputLabel>
         <Select
           labelId="demo-customized-select-label"
           id="demo-customized-select"
-          value={age}
+          value={value}
           onChange={handleChange}
           input={<BootstrapInput />}
         >
@@ -86,20 +76,6 @@ export default function CustomizedSelect({
           })}
         </Select>
       </FormControl>
-      {/* <FormControl sx={{ m: 1, width: 125 }} variant="standard">
-        <InputLabel id="demo-customized-select-label">Height</InputLabel>
-        <Select
-          labelId="demo-customized-select-label"
-          id="demo-customized-select"
-          value={age}
-          onChange={handleChange}
-          input={<BootstrapInput />}
-        >
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={20}>20</MenuItem>
-          <MenuItem value={30}>30</MenuItem>
-        </Select>
-      </FormControl> */}
     </div>
   );
 }

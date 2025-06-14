@@ -7,6 +7,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CustomizedSelect from "./customizedSelect";
 import Divider from "@mui/material/Divider";
 import CustomColorPicker from "./customColorPicker";
+import { useAppDispatch, useAppSelector } from "../lib/store/hooks";
+import {
+  handleFloorDimensionChange,
+  handleTileAttributesChange,
+  handleTileDimensionChange,
+} from "../lib/store/features/building/floorSlice/floorSlice";
+import { actionTypes } from "../lib/store/features/building/actionTypes";
 
 const widthOptions = [
   { label: "10", value: "10" },
@@ -27,11 +34,98 @@ const lengthOptions = [
   { label: "70", value: "70" },
 ];
 
+const tileWidthOptions = [
+  { label: "1", value: "1" },
+  { label: "2", value: "2" },
+  { label: "3", value: "3" },
+  { label: "4", value: "4" },
+  { label: "5", value: "5" },
+  { label: "6", value: "6" },
+  { label: "7", value: "7" },
+];
+
+const tileLengthOptions = [
+  { label: "1", value: "1" },
+  { label: "2", value: "2" },
+  { label: "3", value: "3" },
+  { label: "4", value: "4" },
+  { label: "5", value: "5" },
+  { label: "6", value: "6" },
+  { label: "7", value: "7" },
+];
+
+const tileThicknessOptions = [
+  { label: "0.1", value: "0.1" },
+  { label: "0.2", value: "0.2" },
+  { label: "0.3", value: "0.3" },
+  { label: "0.4", value: "0.4" },
+  { label: "0.5", value: "0.5" },
+  { label: "0.6", value: "0.6" },
+  { label: "0.7", value: "0.7" },
+];
+
 export default function CustomAccordion() {
   const [expanded, setExpanded] = React.useState(false);
+  const floor = useAppSelector((state) => state.floor);
+
+  const dispatch = useAppDispatch();
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+  };
+
+  const handleFloorWidthChange = (event) => {
+    dispatch(
+      handleFloorDimensionChange({
+        key: actionTypes.WIDTH,
+        value: event.target.value,
+      })
+    );
+  };
+
+  const handleFloorLengthChange = (event) => {
+    dispatch(
+      handleFloorDimensionChange({
+        key: actionTypes.LENGTH,
+        value: event.target.value,
+      })
+    );
+  };
+
+  const handleFloorTileWidthChange = (event) => {
+    dispatch(
+      handleTileDimensionChange({
+        key: actionTypes.TILE_WIDTH,
+        value: event.target.value,
+      })
+    );
+  };
+
+  const handleFloorTileLengthChange = (event) => {
+    dispatch(
+      handleTileDimensionChange({
+        key: actionTypes.TILE_LENGTH,
+        value: event.target.value,
+      })
+    );
+  };
+
+  const handleFloorTileThicknessChange = (event) => {
+    dispatch(
+      handleTileDimensionChange({
+        key: actionTypes.TILE_THICKNESS,
+        value: event.target.value,
+      })
+    );
+  };
+
+  const handleFloorFillingColorChange = (value) => {
+    dispatch(
+      handleTileAttributesChange({
+        key: actionTypes.TILE_FILLING_COLOR,
+        value: value,
+      })
+    );
   };
 
   return (
@@ -52,8 +146,18 @@ export default function CustomAccordion() {
         <AccordionDetails>
           <Divider />
           <div style={{ display: "flex" }}>
-            <CustomizedSelect label="Floor width" data={widthOptions} />
-            <CustomizedSelect label="Floor length" data={lengthOptions} />
+            <CustomizedSelect
+              label="Floor width"
+              data={widthOptions}
+              value={floor?.width}
+              onChange={handleFloorWidthChange}
+            />
+            <CustomizedSelect
+              label="Floor length"
+              data={lengthOptions}
+              value={floor?.length}
+              onChange={handleFloorLengthChange}
+            />
           </div>
           <div style={{ margin: "8px", marginBottom: "20px" }}>
             <Typography
@@ -65,18 +169,24 @@ export default function CustomAccordion() {
             <div style={{ display: "flex" }}>
               <CustomizedSelect
                 label="Tile width"
-                data={widthOptions}
+                data={tileWidthOptions}
+                value={floor?.tileWidth}
+                onChange={handleFloorTileWidthChange}
                 width="110px"
               />
               <CustomizedSelect
                 label="Tile length"
-                data={lengthOptions}
+                data={tileLengthOptions}
+                value={floor?.tileLength}
+                onChange={handleFloorTileLengthChange}
                 width="110px"
               />
             </div>
             <CustomizedSelect
-              label="Tile depth"
-              data={lengthOptions}
+              label="Tile Thickness"
+              data={tileThicknessOptions}
+              value={floor?.tileThickness}
+              onChange={handleFloorTileThicknessChange}
               width="110px"
             />
             <Typography
@@ -96,7 +206,10 @@ export default function CustomAccordion() {
               Tile filling color
             </Typography>
             <div style={{ margin: "8px" }}>
-              <CustomColorPicker />
+              <CustomColorPicker
+                value={floor?.tileFillingColor}
+                onChangeColor={handleFloorFillingColorChange}
+              />
             </div>
           </div>
           <Divider />
