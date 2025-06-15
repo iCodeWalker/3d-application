@@ -5,6 +5,10 @@ import { Perf } from "r3f-perf";
 import * as THREE from "three";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import FloorModel from "../models/floorModel/floorModel";
+import { useAppSelector } from "../lib/store/hooks";
+import { useEffect } from "react";
+import ExtrudedTile from "../models/floorModel/floorModel2";
+import FloorModel2 from "../models/floorModel/floorModel2";
 
 const doorModel = new THREE.Shape();
 
@@ -168,6 +172,11 @@ const woodColor = new THREE.Color(0xeeeeff);
 const darkWoodColor = new THREE.Color(0xffdbb5);
 
 export default function Experience() {
+  const floor = useAppSelector((state) => state.floor);
+
+  console.log(floor?.tileTexture, "floorModel================");
+
+  useEffect(() => {}, [floor]);
   //   const dispatch = useDispatch();
 
   //   const buildingReducer = useSelector(
@@ -202,7 +211,7 @@ export default function Experience() {
         makeDefault
         minDistance={1}
         maxDistance={60}
-        target={[5, 0, -5]}
+        target={[0, 0, 0]}
       />
       {/* <directionalLight castShadow position={[6, 4, 1]} intensity={2.5} />
       <directionalLight castShadow position={[-6, 4, 1]} intensity={2.5} />
@@ -223,14 +232,43 @@ export default function Experience() {
       </mesh> */}
       {/*  Left */}
       {/* <FloorModel length={14} width={14} /> */}
-      <FloorModel
+      {/* <FloorModel
         length={10}
         width={10}
         tileLength={2}
-        tileWidth={2}
-        gapColor="red"
-        texture="tile.jpg"
+        tileWidth={3}
+        gapColor={floor?.tileFillingColor}
+        texture={
+          floor?.tileTexture === undefined
+            ? "images/tile1.jpg"
+            : `images/${floor?.tileTexture}`
+        }
+        // texture="tile.jpg"
+      /> */}
+
+      <FloorModel2
+        length={10}
+        width={23}
+        tileLength={3}
+        tileWidth={3}
+        gapColor={floor?.tileFillingColor}
+        texture={
+          floor?.tileTexture === undefined
+            ? "images/tile1.jpg"
+            : `images/${floor?.tileTexture}`
+        }
+        // texture="tile.jpg"
       />
+
+      {/* <ExtrudedTile
+        tileWidth={2}
+        depth={0.1}
+        texture={
+          floor?.tileTexture === undefined
+            ? "images/tile1.jpg"
+            : `images/${floor?.tileTexture}`
+        }
+      /> */}
 
       {/* <FrontWallModel
         wallLength={buildingReducer.width}

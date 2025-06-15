@@ -14,6 +14,7 @@ import {
   handleTileDimensionChange,
 } from "../lib/store/features/building/floorSlice/floorSlice";
 import { actionTypes } from "../lib/store/features/building/actionTypes";
+import ColorCard from "./colorCard";
 
 const widthOptions = [
   { label: "10", value: "10" },
@@ -128,6 +129,13 @@ export default function CustomAccordion() {
     );
   };
 
+  const imageData = Array.from({ length: 15 }, (_, i) => {
+    return {
+      path: `/images/tile${i + 1}.jpg`,
+      name: `tile${i + 1}`,
+    };
+  });
+
   return (
     <div style={{ marginTop: "20px", marginBottom: "20px" }}>
       <Accordion
@@ -183,12 +191,69 @@ export default function CustomAccordion() {
               />
             </div>
             <CustomizedSelect
-              label="Tile Thickness"
+              label="Tile thickness"
               data={tileThicknessOptions}
               value={floor?.tileThickness}
               onChange={handleFloorTileThicknessChange}
               width="110px"
             />
+            <div style={{ margin: "20px 0" }}>
+              <Typography
+                component="span"
+                sx={{
+                  width: "100%",
+                  flexShrink: 0,
+                  fontSize: "13px",
+                  color: "rgba(0, 0, 0, 0.6)",
+                  fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+                  fontWeight: "400",
+                  lineHeight: "23px",
+                  margin: "8px",
+                  marginBottom: "16px",
+                }}
+              >
+                Tile textures
+              </Typography>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "16px",
+                  padding: "10px",
+                }}
+              >
+                {imageData?.map((item, i) => {
+                  return (
+                    <ColorCard
+                      imagePath={item.path}
+                      imageName={item.name}
+                      key={i}
+                    />
+                  );
+                })}
+
+                {/* <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> <ColorCard />
+                <ColorCard />
+                <ColorCard /> */}
+              </div>
+            </div>
             <Typography
               component="span"
               sx={{

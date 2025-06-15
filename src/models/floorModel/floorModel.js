@@ -1,7 +1,7 @@
 "use client";
 import { useAppSelector } from "@/src/lib/store/hooks";
 import { useLoader } from "@react-three/fiber";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 
 // depth of floorExtrudeSettings will be considered for the length of the floor.
@@ -13,33 +13,40 @@ const FloorModel = ({
   tileLength,
   tileWidth,
   gapColor = "red",
-  texture,
+  texture = "images/tile11.jpg",
 }) => {
   const [tilesData, setTilesData] = useState([]);
+
+  console.log(texture, "TextureLoader");
+  if (texture === "images/undefined.jpg") {
+    texture = "images/tile11.jpg";
+  }
 
   const tileTexture = useLoader(THREE.TextureLoader, texture);
   const tileGapColor = new THREE.Color(gapColor);
 
   // ################### Repeating Tile Texture ###################
+  tileTexture.repeat.set(1, 1);
+  // tileTexture.rotation = Math.PI / 2;
   tileTexture.wrapS = THREE.RepeatWrapping;
   tileTexture.wrapT = THREE.RepeatWrapping;
 
   // ################### Floor Tile Model ###################
   // Subtracted tile gap value from tile size = tileWidth - 0.01
   const floorTileModel = new THREE.Shape();
-  floorTileModel.moveTo(0 - 0.01, 0); // Start point
-  floorTileModel.lineTo(0 - 0.01, 0.25); // Top left
-  floorTileModel.lineTo(tileWidth - 0.01, 0.25); // Top right
-  floorTileModel.lineTo(tileWidth - 0.01, 0); // Bottom right
-  floorTileModel.lineTo(0 - 0.01, 0); // Back to the start point
+  floorTileModel.moveTo(0, 0); // Start point
+  floorTileModel.lineTo(0, 0.01); // Top left
+  floorTileModel.lineTo(tileWidth, 0.01); // Top right
+  floorTileModel.lineTo(tileWidth, 0); // Bottom right
+  floorTileModel.lineTo(0, 0); // Back to the start point
   floorTileModel.closePath(); // Close the path
 
   // ################### Floor Tile Model : last tile model function ###################
   const floorLastTileModel = (x) => {
     const floorLastTileModel = new THREE.Shape();
     floorLastTileModel.moveTo(0 - 0.01, 0); // Start point
-    floorLastTileModel.lineTo(0 - 0.01, 0.25); // Top left
-    floorLastTileModel.lineTo(x - 0.01, 0.25); // Top right
+    floorLastTileModel.lineTo(0 - 0.01, 0.01); // Top left
+    floorLastTileModel.lineTo(x - 0.01, 0.01); // Top right
     floorLastTileModel.lineTo(x - 0.01, 0); // Bottom right
     floorLastTileModel.lineTo(0 - 0.01, 0); // Back to the start point
     floorLastTileModel.closePath(); // Close the path
@@ -109,37 +116,37 @@ const FloorModel = ({
   };
 
   // ################### Function to create horizontal tile gap ###################
-  const horizontalTileGap = (zPosition) => {
-    return (
-      <mesh
-        position-z={-zPosition}
-        position-y={0.001}
-        position-x={0}
-        rotation={[0, -Math.PI / 2, 0]}
-      >
-        <extrudeGeometry
-          args={[floorTileGapModel, horizontalTileGapExtrudeSettings]}
-        />
-        <meshStandardMaterial
-          color={tileGapColor}
-          map={tileTexture}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-    );
-  };
+  // const horizontalTileGap = (zPosition) => {
+  //   return (
+  //     <mesh
+  //       position-z={-zPosition}
+  //       position-y={0.001}
+  //       position-x={0}
+  //       rotation={[0, -Math.PI / 2, 0]}
+  //     >
+  //       <extrudeGeometry
+  //         args={[floorTileGapModel, horizontalTileGapExtrudeSettings]}
+  //       />
+  //       <meshStandardMaterial
+  //         color={tileGapColor}
+  //         map={tileTexture}
+  //         side={THREE.DoubleSide}
+  //       />
+  //     </mesh>
+  //   );
+  // };
 
   // ################### Function to create horizontal tile gap ###################
 
-  let horizontalTileGapData = [];
-  for (let i = 0; i < length; i++) {
-    // if (i % 1 == 0 && tileLength == 1) {
-    //   horizontalTileGapData.push(horizontalTileGap(i));
-    // }
-    if (i % tileLength == 0 && i != 0) {
-      horizontalTileGapData.push(horizontalTileGap(i));
-    }
-  }
+  // let horizontalTileGapData = [];
+  // for (let i = 0; i < length; i++) {
+  //   // if (i % 1 == 0 && tileLength == 1) {
+  //   //   horizontalTileGapData.push(horizontalTileGap(i));
+  //   // }
+  //   if (i % tileLength == 0 && i != 0) {
+  //     horizontalTileGapData.push(horizontalTileGap(i));
+  //   }
+  // }
 
   let floorTileStartingCoordinates = [];
   for (let i = 0; i <= width; i++) {
@@ -253,15 +260,15 @@ const FloorModel = ({
                 args={[floorTileModel, floorTileExtrudeSettings]}
               />
               <meshStandardMaterial
-                // color={"red"}
-                map={tileTexture}
-                side={THREE.DoubleSide}
+                color={"red"}
+                // map={tileTexture}
+                side={THREE.FrontSide}
               />
             </mesh>
           )}
 
           {/* #################### right tile gap ################ */}
-          {i == lastCordinate ||
+          {/* {i == lastCordinate ||
           (width % tileWidth === 0 &&
             lastCordinate - i === tileWidth) ? null : (
             <mesh
@@ -283,7 +290,7 @@ const FloorModel = ({
                 polygonOffsetUnits={-0.1}
               />
             </mesh>
-          )}
+          )} */}
         </group>
       );
     }
@@ -320,7 +327,7 @@ const FloorModel = ({
 
   useEffect(() => {
     let tilesData = verticalTileMesh();
-    setTilesData([...tilesData, ...horizontalTileGapData]);
+    setTilesData([...tilesData]);
   }, [length, width, tileLength, tileWidth, gapColor, texture]);
 
   const floor = useAppSelector((state) => state.floor);
