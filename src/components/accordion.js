@@ -129,7 +129,7 @@ export default function CustomAccordion() {
     );
   };
 
-  const imageData = Array.from({ length: 15 }, (_, i) => {
+  const imageData = Array.from({ length: 50 }, (_, i) => {
     return {
       path: `/images/tile${i + 1}.jpg`,
       name: `tile${i + 1}`,

@@ -250,7 +250,7 @@ export default function Experience() {
         length={10}
         width={22}
         tileLength={3}
-        tileWidth={3}
+        tileWidth={5}
         gapColor={floor?.tileFillingColor}
         texture={
           floor?.tileTexture === undefined
