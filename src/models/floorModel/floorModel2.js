@@ -35,8 +35,8 @@ const FloorModel2 = ({
   // Subtracted tile gap value from tile size = tileWidth - 0.01
   const floorTileModel = new THREE.Shape();
   floorTileModel.moveTo(0, 0); // Start point
-  floorTileModel.lineTo(0, 0.1); // Top left
-  floorTileModel.lineTo(tileWidth, 0.1); // Top right
+  floorTileModel.lineTo(0, 0.02); // Top left
+  floorTileModel.lineTo(tileWidth, 0.02); // Top right
   floorTileModel.lineTo(tileWidth, 0); // Bottom right
   floorTileModel.lineTo(0, 0); // Back to the start point
   floorTileModel.closePath(); // Close the path
@@ -111,6 +111,66 @@ const FloorModel2 = ({
 
     // ############# Creating tiles meshes in x-direction ############# : Code Starts
     // meshInXDirection = tilePositionData?.map((Coordinate, index) => {
+    //   let tileCenterOffsetX = 0;
+
+    //   let actualTileWidth =
+    //     Math.ceil(
+    //       parseFloat(Coordinate.xPosition.end) -
+    //         parseFloat(Coordinate.xPosition.start)
+    //     ) <= tileWidth
+    //       ? Math.ceil(
+    //           parseFloat(Coordinate.xPosition.end) -
+    //             parseFloat(Coordinate.xPosition.start)
+    //         )
+    //       : Math.floor(
+    //           parseFloat(Coordinate.xPosition.end) -
+    //             parseFloat(Coordinate.xPosition.start)
+    //         );
+
+    //   if (
+    //     index === tilePositionData.length - 1 &&
+    //     actualTileWidth < tileWidth
+    //   ) {
+    //     tileTexture.repeat.set(0.5, 0.5);
+    //     // tileTexture.rotation = Math.PI / 2;
+    //     tileTexture.wrapS = THREE.RepeatWrapping;
+    //     tileTexture.wrapT = THREE.RepeatWrapping;
+    //     const floorTileModel = new THREE.Shape();
+    //     floorTileModel.moveTo(0, 0); // Start point
+    //     floorTileModel.lineTo(0, 0.1); // Top left
+    //     floorTileModel.lineTo(actualTileWidth, 0.1); // Top right
+    //     floorTileModel.lineTo(actualTileWidth, 0); // Bottom right
+    //     floorTileModel.lineTo(0, 0); // Back to the start point
+    //     floorTileModel.closePath(); // Close the path
+
+    //     // ################### Floor Tile Extrude Setting  ###################
+    //     const floorTileExtrudeSettings = {
+    //       depth: -tileLength,
+    //       bevelEnabled: false,
+    //       bevelSegments: 1,
+    //       steps: 8,
+    //       bevelSize: 3,
+    //       bevelThickness: 1,
+    //     };
+    //     tileCenterOffsetX = tileWidth / 6;
+    //     return (
+    //       <mesh
+    //         position-z={parseFloat(Coordinate.zPosition)}
+    //         position-y={0}
+    //         position-x={parseFloat(Coordinate.xPosition.start)}
+    //         key={index}
+    //       >
+    //         <extrudeGeometry
+    //           args={[floorTileModel, floorTileExtrudeSettings]}
+    //         />
+    //         <meshStandardMaterial
+    //           color={"red"}
+    //           map={tileTexture}
+    //           side={THREE.DoubleSide}
+    //         />
+    //       </mesh>
+    //     );
+    //   }
     //   return (
     //     <mesh
     //       position-z={parseFloat(Coordinate.zPosition)}
@@ -119,20 +179,14 @@ const FloorModel2 = ({
     //       key={index}
     //     >
     //       {console.log(
-    //         parseFloat(Coordinate.xPosition.start),
+    //         parseFloat(Coordinate.xPosition.start) +
+    //           parseFloat(tileCenterOffsetX),
     //         "xDirectionStartingCordinates",
     //         parseFloat(Coordinate.xPosition.end),
-    //         parseFloat(Coordinate.xPosition.end) -
-    //           parseFloat(Coordinate.xPosition.start)
+
+    //         actualTileWidth
     //       )}
-    //       <boxGeometry
-    //         args={[
-    //           parseFloat(Coordinate.xPosition.end) -
-    //             parseFloat(Coordinate.xPosition.start),
-    //           0.1,
-    //           tileLength,
-    //         ]}
-    //       />
+    //       <boxGeometry args={[actualTileWidth, 0.1, tileLength]} />
     //       <meshStandardMaterial
     //         // color={"red"}
     //         map={tileTexture}
@@ -143,12 +197,39 @@ const FloorModel2 = ({
     // });
 
     meshInXDirection = tilePositionData?.map((Coordinate, index) => {
+      let actualTileWidth =
+        Math.ceil(
+          parseFloat(Coordinate.xPosition.end) -
+            parseFloat(Coordinate.xPosition.start)
+        ) <= tileWidth
+          ? Math.ceil(
+              parseFloat(Coordinate.xPosition.end) -
+                parseFloat(Coordinate.xPosition.start)
+            )
+          : Math.floor(
+              parseFloat(Coordinate.xPosition.end) -
+                parseFloat(Coordinate.xPosition.start)
+            );
       const tileWidthValue =
         parseFloat(Coordinate.xPosition.end) -
         parseFloat(Coordinate.xPosition.start);
 
-      const tileCenterOffsetX = tileWidthValue / 2;
+      let tileCenterOffsetX = actualTileWidth / 2;
 
+      console.log(
+        index,
+        "index",
+        tileWidthValue,
+        "tileWidthValue",
+        tileCenterOffsetX
+      );
+
+      if (
+        index === tilePositionData.length - 1 &&
+        actualTileWidth < tileWidth
+      ) {
+        tileCenterOffsetX = actualTileWidth / 2;
+      }
       return (
         <mesh
           key={index}
@@ -158,7 +239,7 @@ const FloorModel2 = ({
             parseFloat(Coordinate.zPosition) + tileLength / 2, // also center in Z
           ]}
         >
-          <boxGeometry args={[tileWidthValue, 0.1, tileLength]} />
+          <boxGeometry args={[actualTileWidth, 0.1, tileLength]} />
           <meshStandardMaterial map={tileTexture} side={THREE.DoubleSide} />
         </mesh>
       );

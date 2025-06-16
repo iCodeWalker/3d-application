@@ -211,7 +211,7 @@ export default function Experience() {
         makeDefault
         minDistance={1}
         maxDistance={60}
-        target={[0, 0, 0]}
+        target={[10, 0, 5]}
       />
       {/* <directionalLight castShadow position={[6, 4, 1]} intensity={2.5} />
       <directionalLight castShadow position={[-6, 4, 1]} intensity={2.5} />
@@ -221,7 +221,7 @@ export default function Experience() {
       <ambientLight intensity={0.5} />
       {/* <Box position={[1.2, 0, 0]}></Box> */}
 
-      {/* <axesHelper args={[20]} /> */}
+      <axesHelper args={[20]} />
       {/* <mesh castShadow position={[-2, 2, 0]}>
         <sphereGeometry />
         <meshStandardMaterial color="orange" />
@@ -248,7 +248,7 @@ export default function Experience() {
 
       <FloorModel2
         length={10}
-        width={23}
+        width={22}
         tileLength={3}
         tileWidth={3}
         gapColor={floor?.tileFillingColor}
