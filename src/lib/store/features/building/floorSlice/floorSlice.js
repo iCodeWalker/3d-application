@@ -15,13 +15,13 @@ import { actionTypes } from "../actionTypes";
  */
 
 const initialState = {
-  width: 30,
+  width: 20,
   length: 30,
-  tileLength: 2,
-  tileWidth: 2,
-  tileThickness: 0.3,
+  tileLength: 3,
+  tileWidth: 4,
+  tileThickness: 0.1,
   tileFillingColor: "#f2f2f2",
-  tileTexture: "tile11.jpg",
+  tileTexture: "tile13.jpg",
 };
 
 export const floorSlice = createSlice({

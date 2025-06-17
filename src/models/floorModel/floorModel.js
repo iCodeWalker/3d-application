@@ -4,343 +4,198 @@ import { useLoader } from "@react-three/fiber";
 import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 
-// depth of floorExtrudeSettings will be considered for the length of the floor.
-// first argument of the floorModel.moveTo will be considered for the width of the floor
+/**
+ * Floor model to create floor section in 3D
+ */
+
+/**
+ *
+ * @param {length, width, tileLength, tileWidth, tileFillingColor, texture}
+ * length : length of floor
+ * width : width of floor
+ * tileWidth : width of tile
+ * tileLength : length of tile
+ * tileFillingColor : color between the gap tiles
+ * texture : tile image
+ *
+ * @returns Floor Model
+ */
 
 const FloorModel = ({
   length,
   width,
   tileLength,
   tileWidth,
-  gapColor = "red",
+  tileFillingColor = "red",
   texture = "images/tile11.jpg",
 }) => {
-  const [tilesData, setTilesData] = useState([]);
-
-  console.log(texture, "TextureLoader");
   if (texture === "images/undefined.jpg") {
     texture = "images/tile11.jpg";
   }
 
   const tileTexture = useLoader(THREE.TextureLoader, texture);
-  const tileGapColor = new THREE.Color(gapColor);
+  const tileGapColor = new THREE.Color(tileFillingColor);
 
-  // ################### Repeating Tile Texture ###################
+  /**
+   * Repeating Tile Texture
+   */
   tileTexture.repeat.set(1, 1);
-  // tileTexture.rotation = Math.PI / 2;
   tileTexture.wrapS = THREE.RepeatWrapping;
   tileTexture.wrapT = THREE.RepeatWrapping;
 
-  // ################### Floor Tile Model ###################
-  // Subtracted tile gap value from tile size = tileWidth - 0.01
-  const floorTileModel = new THREE.Shape();
-  floorTileModel.moveTo(0, 0); // Start point
-  floorTileModel.lineTo(0, 0.01); // Top left
-  floorTileModel.lineTo(tileWidth, 0.01); // Top right
-  floorTileModel.lineTo(tileWidth, 0); // Bottom right
-  floorTileModel.lineTo(0, 0); // Back to the start point
-  floorTileModel.closePath(); // Close the path
-
-  // ################### Floor Tile Model : last tile model function ###################
-  const floorLastTileModel = (x) => {
-    const floorLastTileModel = new THREE.Shape();
-    floorLastTileModel.moveTo(0 - 0.01, 0); // Start point
-    floorLastTileModel.lineTo(0 - 0.01, 0.01); // Top left
-    floorLastTileModel.lineTo(x - 0.01, 0.01); // Top right
-    floorLastTileModel.lineTo(x - 0.01, 0); // Bottom right
-    floorLastTileModel.lineTo(0 - 0.01, 0); // Back to the start point
-    floorLastTileModel.closePath(); // Close the path
-
-    return floorLastTileModel;
-  };
-
-  // ################### Floor Tile Model : last tile extrude setting function if length is not multiple of 2 ###################
-
-  const floorVerticalLastTileExtrudeSetting = (zDistance) => {
-    const extrudeSetting = {
-      depth: -zDistance,
-      bevelEnabled: false,
-      bevelSegments: 0,
-      steps: 1,
-      bevelSize: 0.1,
-      bevelThickness: 1,
-    };
-
-    return extrudeSetting;
-  };
-
-  // ################### Floor Tile Extrude Setting  ###################
-  const floorTileExtrudeSettings = {
-    depth: -tileLength,
-    bevelEnabled: false,
-    bevelSegments: 0,
-    steps: 1,
-    bevelSize: 0.1,
-    bevelThickness: 1,
-  };
-
-  // ################### Floor Tile-Gap Model ###################
-  const floorTileGapModel = new THREE.Shape();
-  floorTileGapModel.moveTo(-0.01, 0);
-  floorTileGapModel.lineTo(-0.01, 0.252);
-  floorTileGapModel.lineTo(0.01, 0.252);
-  floorTileGapModel.lineTo(0.01, 0);
-  floorTileGapModel.lineTo(-0.01, 0);
-  floorTileGapModel.closePath();
-
-  const floorTileGapModel2 = new THREE.Shape();
-  floorTileGapModel2.moveTo(-0.01, 0);
-  floorTileGapModel2.lineTo(-0.01, 0.253);
-  floorTileGapModel2.lineTo(0.01, 0.253);
-  floorTileGapModel2.lineTo(0.01, 0);
-  floorTileGapModel2.lineTo(-0.01, 0);
-  floorTileGapModel2.closePath();
-  // ################### Floor Tile-Gap Extrude Setting  ###################
-  const floorTileGapExtrudeSettings = {
-    depth: -length,
-    bevelEnabled: false,
-    bevelSegments: 1,
-    steps: 1,
-    bevelSize: 0.1,
-    bevelThickness: 0.1,
-  };
-
-  // ################### Horizontal Tile-Gap exturde setting ###################
-  const horizontalTileGapExtrudeSettings = {
-    depth: -width,
-    bevelEnabled: false,
-    bevelSegments: 1,
-    steps: 1,
-    bevelSize: 0.1,
-    bevelThickness: 0.1,
-  };
-
-  // ################### Function to create horizontal tile gap ###################
-  // const horizontalTileGap = (zPosition) => {
-  //   return (
-  //     <mesh
-  //       position-z={-zPosition}
-  //       position-y={0.001}
-  //       position-x={0}
-  //       rotation={[0, -Math.PI / 2, 0]}
-  //     >
-  //       <extrudeGeometry
-  //         args={[floorTileGapModel, horizontalTileGapExtrudeSettings]}
-  //       />
-  //       <meshStandardMaterial
-  //         color={tileGapColor}
-  //         map={tileTexture}
-  //         side={THREE.DoubleSide}
-  //       />
-  //     </mesh>
-  //   );
-  // };
-
-  // ################### Function to create horizontal tile gap ###################
-
-  // let horizontalTileGapData = [];
-  // for (let i = 0; i < length; i++) {
-  //   // if (i % 1 == 0 && tileLength == 1) {
-  //   //   horizontalTileGapData.push(horizontalTileGap(i));
-  //   // }
-  //   if (i % tileLength == 0 && i != 0) {
-  //     horizontalTileGapData.push(horizontalTileGap(i));
-  //   }
-  // }
-
-  let floorTileStartingCoordinates = [];
-  for (let i = 0; i <= width; i++) {
-    if (i % tileWidth !== 0) {
-      continue;
-    }
-    floorTileStartingCoordinates.push(i);
-  }
-
-  // ################### Function to create horizontal/along width tile meshes ###################
-  const horizontalTileMesh = (zPosition, verticalLastIndex) => {
-    const horizontalMeshData = [];
-
-    for (let i = 0; i <= width; i++) {
-      if (i % tileWidth !== 0) {
-        continue;
-      }
-
-      let lastCordinate =
-        floorTileStartingCoordinates[floorTileStartingCoordinates.length - 1];
-
-      horizontalMeshData.push(
-        <group>
-          {/* Main tile Mesh */}
-
-          {i == lastCordinate ? (
-            // #################### For last veritcal tile ####################
-            verticalLastIndex === true ? (
-              <mesh position-z={-zPosition} position-y={0} position-x={i}>
-                <extrudeGeometry
-                  args={[
-                    floorLastTileModel(width - lastCordinate),
-                    floorVerticalLastTileExtrudeSetting(length - zPosition),
-                  ]}
-                />
-                <meshStandardMaterial
-                  map={tileTexture}
-                  side={THREE.DoubleSide}
-                />
-              </mesh>
-            ) : (
-              // length - zPosition >= tileLength ? (
-              <mesh position-z={-zPosition} position-y={0} position-x={i}>
-                {console.log(
-                  length - lastCordinate,
-                  tileLength,
-                  lastCordinate,
-                  i,
-                  zPosition,
-                  length - zPosition,
-                  "zPosition---------------"
-                )}
-
-                <extrudeGeometry
-                  args={[
-                    floorLastTileModel(width - lastCordinate),
-                    floorTileExtrudeSettings,
-                  ]}
-                />
-                <meshStandardMaterial
-                  map={tileTexture}
-                  side={THREE.DoubleSide}
-                />
-              </mesh>
-            )
-          ) : // ) : (
-          //   <mesh position-z={-zPosition} position-y={0} position-x={i}>
-          //     {console.log(
-          //       length - lastCordinate,
-          //       tileLength,
-          //       lastCordinate,
-          //       i,
-          //       zPosition,
-          //       length - zPosition,
-          //       "zPosition---------------"
-          //     )}
-
-          //     <extrudeGeometry
-          //       args={[
-          //         floorLastTileModel(width - lastCordinate),
-          //         floorVerticalLastTileExtrudeSetting(length - zPosition),
-          //       ]}
-          //     />
-          //     <meshStandardMaterial
-          //       // map={tileTexture}
-          //       color={"red"}
-          //       side={THREE.DoubleSide}
-          //     />
-          //   </mesh>
-          // )
-          verticalLastIndex === true ? (
-            // ############## If length is not multiple of 2 ################
-            <mesh position-z={-zPosition} position-y={0} position-x={i}>
-              <extrudeGeometry
-                args={[
-                  floorTileModel,
-                  floorVerticalLastTileExtrudeSetting(length - zPosition),
-                ]}
-              />
-              <meshStandardMaterial
-                // color={tileGapColor}
-                map={tileTexture}
-                side={THREE.DoubleSide}
-              />
-            </mesh>
-          ) : (
-            // ################ if length multiple of 2 ###################
-            <mesh position-z={-zPosition} position-y={0} position-x={i}>
-              {console.log(i, "dsadsadsadasdada")}
-              <extrudeGeometry
-                args={[floorTileModel, floorTileExtrudeSettings]}
-              />
-              <meshStandardMaterial
-                color={"red"}
-                // map={tileTexture}
-                side={THREE.FrontSide}
-              />
-            </mesh>
-          )}
-
-          {/* #################### right tile gap ################ */}
-          {/* {i == lastCordinate ||
-          (width % tileWidth === 0 &&
-            lastCordinate - i === tileWidth) ? null : (
-            <mesh
-              position-z={-0.001}
-              position-y={0.001}
-              position-x={i + tileWidth - 0.01}
-            >
-              {console.log(i, lastCordinate, width, "lastCordinate")}
-              <extrudeGeometry
-                args={[floorTileGapModel, floorTileGapExtrudeSettings]}
-              />
-              <meshStandardMaterial
-                // color={"red"}
-                color={tileGapColor}
-                map={tileTexture}
-                side={THREE.DoubleSide}
-                polygonOffset={true}
-                polygonOffsetFactor={-0.1} // Negative values push the mesh back
-                polygonOffsetUnits={-0.1}
-              />
-            </mesh>
-          )} */}
-        </group>
-      );
-    }
-    return horizontalMeshData;
-  };
-
-  // ################### Function to create vertical/along length tile meshes ###################
-  const verticalTileMesh = () => {
-    const verticalMeshData = [];
-
-    for (let i = 0; i < length; i++) {
-      if (i % tileLength !== 0 && i != 0) {
-        continue;
-      }
-
-      // ############## For last vertical tile if length is odd number #############
-
-      if (
-        i === length - 1 || // For tile length 1, 2, 4, 8
-        i === length - 2 || // For tile length 3, 5
-        i === length - 3 || // For tile length 7
-        i === length - 5 || // For tile length 6
-        i === length - 7 || // For tile length 10
-        i === length - 8 || // For tile length 9
-        length - i < tileLength
-      ) {
-        verticalMeshData.push(horizontalTileMesh(i, true));
-      } else {
-        verticalMeshData.push(horizontalTileMesh(i, false));
-      }
-    }
-    return verticalMeshData;
-  };
-
-  useEffect(() => {
-    let tilesData = verticalTileMesh();
-    setTilesData([...tilesData]);
-  }, [length, width, tileLength, tileWidth, gapColor, texture]);
-
   const floor = useAppSelector((state) => state.floor);
 
-  console.log(floor, "floorModel================");
+  const createTilesMesh = useMemo(() => {
+    let meshInXDirection = [];
+    /**
+     * xDirectionStartingCordinates : Array with x-coordinates of the tile
+     */
 
-  useEffect(() => {}, [floor.width]);
+    let xDirectionStartingCordinates = Array.from(
+      { length: Math.ceil(width / tileWidth) },
+      (_, i) => i * (tileWidth + 0.02)
+    );
+
+    /**
+     * zDirectionStartingCordinates : Array with z-coordinates of the tile
+     */
+
+    let zDirectionStartingCordinates = Array.from(
+      { length: Math.ceil(length / tileLength) },
+      (_, i) => (i + 1) * (-tileLength - 0.02)
+    );
+
+    let tilePositionData = [];
+
+    for (let i = 0; i < xDirectionStartingCordinates.length; i++) {
+      /**
+       * looping through the x-coordinate data to create position object that have start & end points data
+       */
+      let positionObj = {};
+      let xEndPoint =
+        parseFloat(xDirectionStartingCordinates[i]) + parseFloat(tileWidth);
+      /**
+       * Checking if last tile width is going out of given floor width
+       */
+      if (
+        parseFloat(xDirectionStartingCordinates[i]) + parseFloat(tileWidth) >
+        width
+      ) {
+        xEndPoint = width;
+      }
+      /**
+       * positionObj :Position object containing start & end points data
+       */
+      positionObj = {
+        xPosition: {
+          start: parseFloat(xDirectionStartingCordinates[i]),
+          end: parseFloat(xEndPoint),
+        },
+      };
+
+      for (let j = 0; j < zDirectionStartingCordinates.length; j++) {
+        /**
+         * looping through the z-coordinate data to create position object that have start & end points data
+         */
+        let zEndPoint =
+          parseFloat(zDirectionStartingCordinates[j]) + parseFloat(tileLength);
+
+        /**
+         * Checking if last tile length is going out of given floor length
+         */
+        if (
+          parseFloat(zDirectionStartingCordinates[j]) + parseFloat(tileLength) >
+          length
+        ) {
+          zEndPoint = length;
+        }
+        /**
+         * positionObj : Position object containing start & end points data
+         */
+        positionObj = {
+          ...positionObj,
+          zPosition: {
+            start: parseFloat(zDirectionStartingCordinates[j]),
+            end: parseFloat(zEndPoint),
+          },
+        };
+        tilePositionData.push(positionObj);
+      }
+    }
+
+    meshInXDirection = tilePositionData?.map((Coordinate, index) => {
+      console.log(Coordinate, "Coordinate");
+      /**
+       *  actualTileWidth : Calculating actual tile width to create a tile
+       */
+      let actualTileWidth =
+        Math.ceil(
+          parseFloat(Coordinate.xPosition.end) -
+            parseFloat(Coordinate.xPosition.start)
+        ) <= tileWidth
+          ? Math.ceil(
+              parseFloat(Coordinate.xPosition.end) -
+                parseFloat(Coordinate.xPosition.start)
+            )
+          : Math.floor(
+              parseFloat(Coordinate.xPosition.end) -
+                parseFloat(Coordinate.xPosition.start)
+            );
+      /**
+       *  actualTileLength : Calculating actual tile length to create a tile
+       */
+      let actualTileLength =
+        Math.ceil(
+          parseFloat(Coordinate.zPosition.end) -
+            parseFloat(Coordinate.zPosition.start)
+        ) <= tileLength
+          ? Math.ceil(
+              parseFloat(Coordinate.zPosition.end) -
+                parseFloat(Coordinate.zPosition.start)
+            )
+          : Math.floor(
+              parseFloat(Coordinate.zPosition.end) -
+                parseFloat(Coordinate.zPosition.start)
+            );
+      /**
+       * tileCenterOffsetX : Offset value for shifting tiles towards the origin in x direction
+       */
+      let tileCenterOffsetX = actualTileWidth / 2;
+      /**
+       * tileCenterOffsetZ : Offset value for shifting tiles towards the origin in z direction
+       */
+      let tileCenterOffsetZ = actualTileLength / 2;
+
+      return (
+        <mesh
+          key={index}
+          position={[
+            parseFloat(Coordinate.xPosition.start) + tileCenterOffsetX, // corrected X position
+            0,
+            parseFloat(Coordinate.zPosition.start) + tileCenterOffsetZ, // corrected Z position
+          ]}
+        >
+          <boxGeometry
+            args={[actualTileWidth, floor?.tileThickness, actualTileLength]}
+          />
+          <meshStandardMaterial map={tileTexture} side={THREE.DoubleSide} />
+        </mesh>
+      );
+    });
+
+    /**
+     * Creating tiles meshes in x-direction : Code Ends :
+     */
+
+    return meshInXDirection;
+  }, [width, length, tileWidth, tileLength, tileTexture, floor?.tileThickness]);
 
   return (
     <>
-      <ambientLight intensity={1} />
+      <ambientLight intensity={1.5} />
       <directionalLight castShadow position={[0, 10, 0]} intensity={2} />
-      {tilesData}
+
+      {...createTilesMesh}
     </>
   );
 };

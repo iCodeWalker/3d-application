@@ -7,8 +7,6 @@ import { TextureLoader } from "three/src/loaders/TextureLoader";
 import FloorModel from "../models/floorModel/floorModel";
 import { useAppSelector } from "../lib/store/hooks";
 import { useEffect } from "react";
-import ExtrudedTile from "../models/floorModel/floorModel2";
-import FloorModel2 from "../models/floorModel/floorModel2";
 
 const doorModel = new THREE.Shape();
 
@@ -211,7 +209,7 @@ export default function Experience() {
         makeDefault
         minDistance={1}
         maxDistance={60}
-        target={[10, 0, 5]}
+        target={[10, 0, -15]}
       />
       {/* <directionalLight castShadow position={[6, 4, 1]} intensity={2.5} />
       <directionalLight castShadow position={[-6, 4, 1]} intensity={2.5} />
@@ -221,7 +219,7 @@ export default function Experience() {
       <ambientLight intensity={0.5} />
       {/* <Box position={[1.2, 0, 0]}></Box> */}
 
-      <axesHelper args={[20]} />
+      {/* <axesHelper args={[20]} /> */}
       {/* <mesh castShadow position={[-2, 2, 0]}>
         <sphereGeometry />
         <meshStandardMaterial color="orange" />
@@ -246,15 +244,15 @@ export default function Experience() {
         // texture="tile.jpg"
       /> */}
 
-      <FloorModel2
-        length={10}
-        width={22}
-        tileLength={3}
-        tileWidth={5}
-        gapColor={floor?.tileFillingColor}
+      <FloorModel
+        length={floor?.length}
+        width={floor?.width}
+        tileLength={floor?.tileLength}
+        tileWidth={floor?.tileWidth}
+        tileFillingColor={floor?.tileFillingColor}
         texture={
           floor?.tileTexture === undefined
-            ? "images/tile1.jpg"
+            ? "images/tile13.jpg"
             : `images/${floor?.tileTexture}`
         }
         // texture="tile.jpg"
