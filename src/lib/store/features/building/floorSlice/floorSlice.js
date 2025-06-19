@@ -15,10 +15,10 @@ import { actionTypes } from "../actionTypes";
  */
 
 const initialState = {
-  width: 20,
-  length: 30,
-  tileLength: 3,
-  tileWidth: 4,
+  width: 10,
+  length: 15,
+  tileLength: 5,
+  tileWidth: 5,
   tileThickness: 0.1,
   tileFillingColor: "#f2f2f2",
   tileTexture: "tile13.jpg",

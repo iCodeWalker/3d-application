@@ -219,7 +219,7 @@ export default function Experience() {
       <ambientLight intensity={0.5} />
       {/* <Box position={[1.2, 0, 0]}></Box> */}
 
-      {/* <axesHelper args={[20]} /> */}
+      <axesHelper args={[20]} />
       {/* <mesh castShadow position={[-2, 2, 0]}>
         <sphereGeometry />
         <meshStandardMaterial color="orange" />

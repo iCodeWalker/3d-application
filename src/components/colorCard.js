@@ -2,13 +2,8 @@ import Image from "next/image";
 import React from "react";
 
 import { useAppDispatch, useAppSelector } from "../lib/store/hooks";
-import {
-  handleFloorDimensionChange,
-  handleTileAttributesChange,
-  handleTileDimensionChange,
-} from "../lib/store/features/building/floorSlice/floorSlice";
+import { handleTileAttributesChange } from "../lib/store/features/building/floorSlice/floorSlice";
 import { actionTypes } from "../lib/store/features/building/actionTypes";
-import { Key } from "@mui/icons-material";
 
 const ColorCard = ({ imagePath, imageName }) => {
   const floor = useAppSelector((state) => state.floor);

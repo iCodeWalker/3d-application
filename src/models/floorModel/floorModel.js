@@ -166,20 +166,68 @@ const FloorModel = ({
        */
       let tileCenterOffsetZ = actualTileLength / 2;
 
+      // ################### Floor Tile Model ###################
+      const tileFillingModel = new THREE.Shape();
+      tileFillingModel.moveTo(
+        Coordinate.xPosition.end + 0.001,
+        -floor?.tileThickness / 2
+      ); // Start pointMore actions
+      tileFillingModel.lineTo(
+        Coordinate.xPosition.end + 0.001,
+        floor?.tileThickness / 2
+      ); // Top left
+      tileFillingModel.lineTo(
+        Coordinate.xPosition.end - 0.001 + 0.02,
+        floor?.tileThickness / 2
+      ); // Top right
+      tileFillingModel.lineTo(
+        Coordinate.xPosition.end - 0.001 + 0.02,
+        -floor?.tileThickness / 2
+      ); // Bottom right
+      tileFillingModel.lineTo(
+        Coordinate.xPosition.end + 0.001,
+        floor?.tileThickness / 2
+      ); // Back to the start point
+      tileFillingModel.closePath(); // Close the path
+
+      const tileFillingExtrudeSettings = {
+        depth: -length,
+        bevelEnabled: false,
+        bevelSegments: 0,
+        steps: 1,
+        bevelSize: 0.1,
+        bevelThickness: 1,
+      };
+
       return (
-        <mesh
-          key={index}
-          position={[
-            parseFloat(Coordinate.xPosition.start) + tileCenterOffsetX, // corrected X position
-            0,
-            parseFloat(Coordinate.zPosition.start) + tileCenterOffsetZ, // corrected Z position
-          ]}
-        >
-          <boxGeometry
-            args={[actualTileWidth, floor?.tileThickness, actualTileLength]}
-          />
-          <meshStandardMaterial map={tileTexture} side={THREE.DoubleSide} />
-        </mesh>
+        <>
+          <mesh
+            key={index}
+            position={[
+              parseFloat(Coordinate.xPosition.start) + tileCenterOffsetX, // corrected X position
+              0,
+              parseFloat(Coordinate.zPosition.start) + tileCenterOffsetZ, // corrected Z position
+            ]}
+          >
+            <boxGeometry
+              args={[actualTileWidth, floor?.tileThickness, actualTileLength]}
+            />
+            <meshStandardMaterial map={tileTexture} side={THREE.DoubleSide} />
+          </mesh>
+
+          {Coordinate.xPosition.end < width && (
+            <mesh>
+              <extrudeGeometry
+                args={[tileFillingModel, tileFillingExtrudeSettings]}
+              />
+              <meshStandardMaterial
+                color={"red"}
+                map={tileTexture}
+                side={THREE.DoubleSide}
+              />
+            </mesh>
+          )}
+        </>
       );
     });
 
