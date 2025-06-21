@@ -209,7 +209,7 @@ export default function Experience() {
         makeDefault
         minDistance={1}
         maxDistance={60}
-        target={[10, 0, -15]}
+        target={[15, 0, 15]}
       />
       {/* <directionalLight castShadow position={[6, 4, 1]} intensity={2.5} />
       <directionalLight castShadow position={[-6, 4, 1]} intensity={2.5} />
@@ -250,6 +250,7 @@ export default function Experience() {
         tileLength={floor?.tileLength}
         tileWidth={floor?.tileWidth}
         tileFillingColor={floor?.tileFillingColor}
+        tileThickness={floor?.tileThickness}
         texture={
           floor?.tileTexture === undefined
             ? "images/tile13.jpg"

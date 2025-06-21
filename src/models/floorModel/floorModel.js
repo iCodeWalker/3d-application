@@ -26,7 +26,8 @@ const FloorModel = ({
   width,
   tileLength,
   tileWidth,
-  tileFillingColor = "red",
+  tileFillingColor,
+  tileThickness,
   texture = "images/tile11.jpg",
 }) => {
   if (texture === "images/undefined.jpg") {
@@ -34,7 +35,6 @@ const FloorModel = ({
   }
 
   const tileTexture = useLoader(THREE.TextureLoader, texture);
-  const tileGapColor = new THREE.Color(tileFillingColor);
 
   /**
    * Repeating Tile Texture
@@ -46,7 +46,13 @@ const FloorModel = ({
   const floor = useAppSelector((state) => state.floor);
 
   const createTilesMesh = useMemo(() => {
-    let meshInXDirection = [];
+    /**
+     * Creating tiles meshes
+     *
+     * : ########################## Code Starts ########################## :
+     */
+
+    let tilesMesh = [];
     /**
      * xDirectionStartingCordinates : Array with x-coordinates of the tile
      */
@@ -62,7 +68,7 @@ const FloorModel = ({
 
     let zDirectionStartingCordinates = Array.from(
       { length: Math.ceil(length / tileLength) },
-      (_, i) => (i + 1) * (-tileLength - 0.02)
+      (_, i) => i * (tileLength + 0.02)
     );
 
     let tilePositionData = [];
@@ -97,6 +103,7 @@ const FloorModel = ({
         /**
          * looping through the z-coordinate data to create position object that have start & end points data
          */
+
         let zEndPoint =
           parseFloat(zDirectionStartingCordinates[j]) + parseFloat(tileLength);
 
@@ -119,12 +126,12 @@ const FloorModel = ({
             end: parseFloat(zEndPoint),
           },
         };
+
         tilePositionData.push(positionObj);
       }
     }
 
-    meshInXDirection = tilePositionData?.map((Coordinate, index) => {
-      console.log(Coordinate, "Coordinate");
+    tilesMesh = tilePositionData?.map((Coordinate, index) => {
       /**
        *  actualTileWidth : Calculating actual tile width to create a tile
        */
@@ -157,6 +164,7 @@ const FloorModel = ({
               parseFloat(Coordinate.zPosition.end) -
                 parseFloat(Coordinate.zPosition.start)
             );
+
       /**
        * tileCenterOffsetX : Offset value for shifting tiles towards the origin in x direction
        */
@@ -166,32 +174,57 @@ const FloorModel = ({
        */
       let tileCenterOffsetZ = actualTileLength / 2;
 
-      // ################### Floor Tile Model ###################
-      const tileFillingModel = new THREE.Shape();
-      tileFillingModel.moveTo(
+      /**
+       * verticalTileFillingModel : Model for vertical tile gap that runs along the length of the floor.
+       */
+      const verticalTileFillingModel = new THREE.Shape();
+      /** Starting point */
+      verticalTileFillingModel.moveTo(
         Coordinate.xPosition.end + 0.001,
-        -floor?.tileThickness / 2
-      ); // Start pointMore actions
-      tileFillingModel.lineTo(
+        -tileThickness / 2
+      );
+      /** Top left point */
+      verticalTileFillingModel.lineTo(
         Coordinate.xPosition.end + 0.001,
-        floor?.tileThickness / 2
-      ); // Top left
-      tileFillingModel.lineTo(
+        tileThickness / 2
+      );
+      /** Top right point */
+      verticalTileFillingModel.lineTo(
         Coordinate.xPosition.end - 0.001 + 0.02,
-        floor?.tileThickness / 2
-      ); // Top right
-      tileFillingModel.lineTo(
+        tileThickness / 2
+      );
+      /** Bottom right point */
+      verticalTileFillingModel.lineTo(
         Coordinate.xPosition.end - 0.001 + 0.02,
-        -floor?.tileThickness / 2
-      ); // Bottom right
-      tileFillingModel.lineTo(
+        -tileThickness / 2
+      );
+      /** Bottom left point */
+      /** Starting point */
+      verticalTileFillingModel.lineTo(
         Coordinate.xPosition.end + 0.001,
-        floor?.tileThickness / 2
-      ); // Back to the start point
-      tileFillingModel.closePath(); // Close the path
+        -tileThickness / 2
+      );
+      /** Closing the path */
+      verticalTileFillingModel.closePath();
 
-      const tileFillingExtrudeSettings = {
-        depth: -length,
+      /**
+       * fillingLengthCorrection : As we have included a gap of 0.02 between every tiles so the actual length of
+       * the whole 3d model has been increased, so we have to add a correction unit to the length
+       *
+       * Length of floor / length of tile = number of tiles
+       * 1 is subtracted from the tile counts as first tile will not have additional 0.02 length
+       *
+       * fillingLengthCorrection = ((Length of floor / length of tile = number of tiles) - 1) * 0.02;
+       */
+
+      let fillingLengthCorrection =
+        Math.floor(parseFloat(length / tileLength) - 1) * 0.02;
+
+      /**
+       * verticalTileFillingExtrudeSettings : extrude setting for vertical tile gap
+       */
+      const verticalTileFillingExtrudeSettings = {
+        depth: length + fillingLengthCorrection,
         bevelEnabled: false,
         bevelSegments: 0,
         steps: 1,
@@ -210,7 +243,7 @@ const FloorModel = ({
             ]}
           >
             <boxGeometry
-              args={[actualTileWidth, floor?.tileThickness, actualTileLength]}
+              args={[actualTileWidth, tileThickness, actualTileLength]}
             />
             <meshStandardMaterial map={tileTexture} side={THREE.DoubleSide} />
           </mesh>
@@ -218,11 +251,13 @@ const FloorModel = ({
           {Coordinate.xPosition.end < width && (
             <mesh>
               <extrudeGeometry
-                args={[tileFillingModel, tileFillingExtrudeSettings]}
+                args={[
+                  verticalTileFillingModel,
+                  verticalTileFillingExtrudeSettings,
+                ]}
               />
               <meshStandardMaterial
-                color={"red"}
-                map={tileTexture}
+                color={tileFillingColor}
                 side={THREE.DoubleSide}
               />
             </mesh>
@@ -232,11 +267,102 @@ const FloorModel = ({
     });
 
     /**
-     * Creating tiles meshes in x-direction : Code Ends :
+     * horizontalTileFillingModel : Model for horizontal tile gap that runs along the width of the floor.
      */
 
-    return meshInXDirection;
-  }, [width, length, tileWidth, tileLength, tileTexture, floor?.tileThickness]);
+    const horizontalTileFillingModel = new THREE.Shape();
+    /** Starting point */
+    horizontalTileFillingModel.moveTo(0, -tileThickness / 2);
+    /** Top left point */
+    horizontalTileFillingModel.lineTo(0, tileThickness / 2);
+    /** Top right point */
+    horizontalTileFillingModel.lineTo(0.018, tileThickness / 2);
+    /** Bottom right point */
+    horizontalTileFillingModel.lineTo(0.018, -tileThickness / 2);
+    /** Bottom left point */
+    /** Starting point */
+    horizontalTileFillingModel.lineTo(0, -tileThickness / 2);
+    /** Closing the path */
+    horizontalTileFillingModel.closePath();
+
+    /**
+     * Creating tile filling gap in horizontal direction that runs along width of floor
+     *
+     * : ########################## Code Starts ########################## :
+     */
+
+    for (let x = 0; x < xDirectionStartingCordinates.length; x++) {
+      let actualTileFillingWidth = tileWidth;
+      if (
+        parseFloat(xDirectionStartingCordinates[x]) + parseFloat(tileWidth) >
+        width
+      ) {
+        actualTileFillingWidth = Math.ceil(
+          parseFloat(width) - parseFloat(xDirectionStartingCordinates[x])
+        );
+      }
+
+      /**
+       * HorizontalTileFillingExtrudeSettings : extrude setting for horizontal tile gap that runs along width
+       * of the floor
+       */
+
+      const horizontalTileFillingExtrudeSettings = {
+        depth: actualTileFillingWidth,
+        bevelEnabled: false,
+        bevelSegments: 0,
+        steps: 1,
+        bevelSize: 0.1,
+        bevelThickness: 1,
+      };
+
+      for (let z = 1; z < zDirectionStartingCordinates.length; z++) {
+        tilesMesh.push(
+          <mesh
+            position={[
+              xDirectionStartingCordinates[x],
+              0,
+              zDirectionStartingCordinates[z] - 0.001,
+            ]}
+            rotation={[0, Math.PI / 2, 0]}
+          >
+            <extrudeGeometry
+              args={[
+                horizontalTileFillingModel,
+                horizontalTileFillingExtrudeSettings,
+              ]}
+            />
+            <meshStandardMaterial
+              color={tileFillingColor}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        );
+      }
+    }
+
+    /**
+     * Creating tile filling gap in horizontal direction that runs along width of floor
+     *
+     * : ########################## Code Ends ########################## :
+     */
+
+    /**
+     * Creating tiles meshes
+     *
+     * : ########################## Code Ends ########################## :
+     */
+
+    return tilesMesh;
+  }, [
+    width,
+    length,
+    tileWidth,
+    tileLength,
+    tileTexture,
+    tileThickness,
+    tileFillingColor,
+  ]);
 
   return (
     <>

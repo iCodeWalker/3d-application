@@ -15,10 +15,10 @@ import { actionTypes } from "../actionTypes";
  */
 
 const initialState = {
-  width: 10,
-  length: 15,
-  tileLength: 5,
-  tileWidth: 5,
+  width: 41,
+  length: 27,
+  tileLength: 3,
+  tileWidth: 3,
   tileThickness: 0.1,
   tileFillingColor: "#f2f2f2",
   tileTexture: "tile13.jpg",
@@ -39,11 +39,11 @@ export const floorSlice = createSlice({
     handleFloorDimensionChange: (state, action) => {
       switch (action.payload.key) {
         case actionTypes.WIDTH:
-          state.width = Number(action.payload.value);
+          state.width = parseFloat(action.payload.value);
           return state;
 
         case actionTypes.LENGTH:
-          state.length = action.payload.value;
+          state.length = parseFloat(action.payload.value);
           return state;
 
         default:
@@ -64,15 +64,15 @@ export const floorSlice = createSlice({
     handleTileDimensionChange: (state, action) => {
       switch (action.payload.key) {
         case actionTypes.TILE_WIDTH:
-          state.tileWidth = action.payload.value;
+          state.tileWidth = parseInt(action.payload.value);
           break;
 
         case actionTypes.TILE_LENGTH:
-          state.tileLength = action.payload.value;
+          state.tileLength = parseInt(action.payload.value);
           break;
 
         case actionTypes.TILE_THICKNESS:
-          state.tileThickness = action.payload.value;
+          state.tileThickness = parseFloat(action.payload.value);
           break;
 
         default:
